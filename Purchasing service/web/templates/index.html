@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bot Shopper - 구매 원장</title>
+    <style>
+        :root {
+            --bg: #f7f9fb;
+            --panel: #ffffff;
+            --panel-soft: #f2f4f7;
+            --panel-mid: #e9edf2;
+            --border: #c7cfdd;
+            --line: #e4e9f1;
+            --text: #151923;
+            --muted: #64748b;
+            --faint: #8ba0bd;
+            --primary: #004ac6;
+            --primary-dark: #003ea8;
+            --error-bg: #ffdad6;
+            --error: #93000a;
+            --ok: #16a34a;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+        a { color: inherit; text-decoration: none; }
+        .layout { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+        .sidebar {
+            border-right: 1px solid var(--border);
+            background: #f3f6fa;
+            display: flex;
+            flex-direction: column;
+            padding: 22px 12px;
+        }
+        .terminal {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            padding: 0 10px 26px;
+        }
+        .terminal-icon {
+            width: 40px;
+            height: 40px;
+            display: grid;
+            place-items: center;
+            background: #dbe5ff;
+            color: var(--primary);
+            font-weight: 900;
+        }
+        .terminal strong { display: block; font-size: 18px; }
+        .terminal span {
+            display: block;
+            margin-top: 2px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+        }
+        .nav { display: grid; gap: 4px; }
+        .nav a {
+            padding: 12px 14px;
+            color: #51627a;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1.7px;
+            text-transform: uppercase;
+        }
+        .nav a.active {
+            border-left: 3px solid var(--primary);
+            background: #fff;
+            color: var(--primary);
+        }
+        .logout { margin-top: auto; border-top: 1px solid var(--border); padding-top: 16px; }
+        .topbar {
+            height: 58px;
+            border-bottom: 1px solid var(--border);
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
+        .brand {
+            font-weight: 950;
+            letter-spacing: -1px;
+            font-size: 20px;
+        }
+        .search {
+            width: 260px;
+            height: 34px;
+            border: 1px solid var(--border);
+            background: var(--panel-soft);
+            padding: 0 12px;
+            color: var(--muted);
+        }
+        main { padding: 28px 32px 44px; }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+            margin-bottom: 26px;
+        }
+        .stat, .card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+        }
+        .stat { padding: 18px 20px; }
+        .label {
+            color: #46566e;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+        }
+        .stat .value {
+            margin-top: 6px;
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .stat .value.primary { color: var(--primary); }
+        .card { margin-bottom: 26px; }
+        .card-head {
+            border-bottom: 1px solid var(--border);
+            background: var(--panel-mid);
+            padding: 12px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-head h2 {
+            margin: 0;
+            font-size: 18px;
+        }
+        .card-body { padding: 22px; }
+        .alert {
+            background: var(--error-bg);
+            color: var(--error);
+            padding: 14px 16px;
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+        .message {
+            background: #e7f1ff;
+            border-left: 3px solid var(--primary);
+            padding: 12px 14px;
+            margin-bottom: 18px;
+        }
+        .message.result { background: #ecfdf5; border-color: var(--ok); }
+        input {
+            width: min(720px, 100%);
+            height: 46px;
+            border: 1px solid var(--border);
+            background: var(--panel-soft);
+            padding: 0 13px;
+            font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+            font-size: 14px;
+            outline: none;
+        }
+        input:focus { border-color: var(--primary); background: #fff; }
+        button {
+            border: 0;
+            background: var(--primary);
+            color: #fff;
+            padding: 12px 18px;
+            font-weight: 800;
+            font-size: 15px;
+            cursor: pointer;
+        }
+        button:hover { background: var(--primary-dark); }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            background: #f8fafc;
+            border-bottom: 1px solid var(--border);
+            color: #46566e;
+            padding: 13px 18px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+        }
+        td {
+            border-bottom: 1px solid var(--line);
+            padding: 15px 18px;
+            font-size: 15px;
+        }
+        td.price {
+            color: var(--primary);
+            font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: minmax(0, 2fr) minmax(320px, 1fr);
+            gap: 26px;
+        }
+        .redeem-form { display: grid; gap: 14px; }
+        .footer {
+            position: fixed;
+            left: 260px;
+            right: 0;
+            bottom: 0;
+            height: 30px;
+            border-top: 1px solid var(--border);
+            background: var(--panel-soft);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 18px;
+            color: var(--muted);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+        }
+        .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: #22c55e;
+            margin-right: 6px;
+        }
+        @media (max-width: 900px) {
+            .layout { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+            .topbar { padding: 0 16px; }
+            .search { display: none; }
+            main { padding: 20px 16px 48px; }
+            .stats, .grid { grid-template-columns: 1fr; }
+            .footer { left: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="terminal">
+                <div class="terminal-icon">&gt;_</div>
+                <div>
+                    <strong>관리자 터미널</strong>
+                    <span>v1.0.4-stable</span>
+                </div>
+            </div>
+            <nav class="nav">
+                <a class="active" href="/">구매 원장</a>
+                <a href="/shop">상점</a>
+                <a href="/settings">대리구매</a>
+            </nav>
+            {% if user %}
+                <nav class="nav logout">
+                    <a href="/logout">로그아웃</a>
+                </nav>
+            {% endif %}
+        </aside>
+
+        <div>
+            <header class="topbar">
+                <div class="brand">BOT_SHOPPER_ADMIN</div>
+                <input class="search" placeholder="구매 기록 검색..." disabled>
+            </header>
+
+            <main>
+                {% if not user %}
+                    <section class="card">
+                        <div class="card-head"><h2>로그인이 필요합니다</h2></div>
+                        <div class="card-body">
+                            <p><strong>guest / guest123</strong> 계정으로 로그인하세요.</p>
+                            <p><a href="/login"><button type="button">로그인</button></a></p>
+                        </div>
+                    </section>
+                {% else %}
+                    <section class="stats">
+                        <div class="stat">
+                            <div class="label">접속 계정</div>
+                            <div class="value">{{ user.username }}</div>
+                        </div>
+                        <div class="stat">
+                            <div class="label">현재 크레딧</div>
+                            <div class="value primary">{{ user.balance }} 크레딧</div>
+                        </div>
+                        <div class="stat">
+                            <div class="label">내부 팀 ID</div>
+                            <div class="value">{{ user.team_id }}</div>
+                        </div>
+                    </section>
+
+                    {% if message %}
+                        <div class="message">{{ message }}</div>
+                    {% endif %}
+                    {% if redeem_result %}
+                        <div class="message result">{{ redeem_result }}</div>
+                    {% endif %}
+
+                    <section class="grid">
+                        <div class="card">
+                            <div class="card-head">
+                                <h2>팀 구매 원장</h2>
+                                <span class="label">동기화됨</span>
+                            </div>
+                            <div style="overflow-x:auto">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>구매자</th>
+                                            <th>상품</th>
+                                            <th>가격</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for order in orders %}
+                                        <tr>
+                                            <td>{{ order.buyer }}</td>
+                                            <td>{{ order.product_name }}</td>
+                                            <td class="price">{{ order.price }} CR</td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="3">구매 기록이 없습니다.</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-head"><h2>기프트 코드 교환</h2></div>
+                            <div class="card-body">
+                                <form class="redeem-form" method="post" action="/redeem">
+                                    <input type="text" name="code" placeholder="XXXX-XXXX-XXXX-XXXX">
+                                    <button type="submit">교환</button>
+                                </form>
+                            </div>
+                        </div>
+                    </section>
+                {% endif %}
+            </main>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <span><span class="dot"></span>서버 온라인</span>
+        <span>Bot_shopper_corp 2026</span>
+    </footer>
+</body>
+</html>

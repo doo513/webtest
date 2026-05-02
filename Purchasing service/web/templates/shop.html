@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bot Shopper - 상점</title>
+    <style>
+        :root {
+            --bg: #f7f9fb;
+            --panel: #ffffff;
+            --panel-soft: #f2f4f7;
+            --border: #c7cfdd;
+            --line: #e4e9f1;
+            --text: #151923;
+            --muted: #64748b;
+            --primary: #004ac6;
+            --primary-dark: #003ea8;
+            --ok-bg: #ecfdf5;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+        a { color: inherit; text-decoration: none; }
+        .layout { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+        .sidebar {
+            border-right: 1px solid var(--border);
+            background: #f3f6fa;
+            display: flex;
+            flex-direction: column;
+            padding: 22px 12px;
+        }
+        .terminal {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            padding: 0 10px 26px;
+        }
+        .terminal-icon {
+            width: 40px;
+            height: 40px;
+            display: grid;
+            place-items: center;
+            background: var(--primary);
+            color: #fff;
+            font-weight: 900;
+        }
+        .terminal strong { display: block; font-size: 18px; }
+        .terminal span {
+            display: block;
+            margin-top: 2px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+        }
+        .nav { display: grid; gap: 4px; }
+        .nav a {
+            padding: 12px 14px;
+            color: #51627a;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1.7px;
+            text-transform: uppercase;
+        }
+        .nav a.active {
+            border-left: 3px solid var(--primary);
+            background: #fff;
+            color: var(--primary);
+        }
+        .logout { margin-top: auto; border-top: 1px solid var(--border); padding-top: 16px; }
+        .topbar {
+            height: 58px;
+            border-bottom: 1px solid var(--border);
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
+        .brand { font-weight: 950; letter-spacing: -1px; font-size: 20px; }
+        .module {
+            background: var(--panel-soft);
+            color: #475569;
+            padding: 4px 9px;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1.6px;
+            text-transform: uppercase;
+        }
+        .search {
+            width: 260px;
+            height: 34px;
+            border: 1px solid var(--border);
+            background: var(--panel-soft);
+            padding: 0 12px;
+            color: var(--muted);
+        }
+        main { padding: 28px 32px 44px; }
+        .head {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 22px;
+        }
+        h1 { margin: 0 0 6px; font-size: 24px; }
+        .sub { margin: 0; color: var(--muted); }
+        .identity {
+            display: flex;
+            gap: 24px;
+            border: 1px solid var(--border);
+            background: #fff;
+            padding: 14px 18px;
+            min-width: 300px;
+        }
+        .label {
+            color: #46566e;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+        }
+        .identity strong {
+            display: block;
+            margin-top: 4px;
+            font-size: 18px;
+        }
+        .identity strong.primary { color: var(--primary); }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+            max-width: 620px;
+        }
+        .stat {
+            background: #fff;
+            border: 1px solid var(--border);
+            padding: 18px 20px;
+        }
+        .stat strong {
+            display: block;
+            margin-top: 8px;
+            font-size: 32px;
+            letter-spacing: -1px;
+        }
+        .message {
+            background: var(--ok-bg);
+            border-left: 3px solid #16a34a;
+            padding: 12px 14px;
+            margin-bottom: 18px;
+        }
+        .table-card {
+            border: 1px solid var(--border);
+            background: #fff;
+        }
+        .table-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            background: var(--panel-soft);
+            padding: 12px 18px;
+        }
+        .table-head strong {
+            font-size: 13px;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            border-bottom: 1px solid var(--border);
+            color: #46566e;
+            background: #fbfcfe;
+            padding: 13px 18px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+        }
+        td {
+            border-bottom: 1px solid var(--line);
+            padding: 18px;
+            font-size: 15px;
+        }
+        tr:hover td { background: #f8fafc; }
+        .id { color: #94a3b8; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+        .product-name { font-weight: 800; }
+        .product-sub { color: #8ba0bd; font-size: 13px; margin-top: 3px; }
+        .price { text-align: right; font-size: 20px; font-weight: 700; }
+        button {
+            border: 0;
+            background: var(--primary);
+            color: #fff;
+            padding: 9px 24px;
+            font-weight: 900;
+            font-size: 12px;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+        button:hover { background: var(--primary-dark); }
+        @media (max-width: 900px) {
+            .layout { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+            .topbar { padding: 0 16px; }
+            .search { display: none; }
+            main { padding: 20px 16px 48px; }
+            .head, .identity { display: block; }
+            .stats { grid-template-columns: 1fr; }
+            .price { text-align: left; }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="terminal">
+                <div class="terminal-icon">&gt;_</div>
+                <div>
+                    <strong>관리자 터미널</strong>
+                    <span>v1.0.4-stable</span>
+                </div>
+            </div>
+            <nav class="nav">
+                <a href="/">구매 원장</a>
+                <a class="active" href="/shop">상점</a>
+                <a href="/settings">대리구매</a>
+            </nav>
+            <nav class="nav logout">
+                <a href="/logout">로그아웃</a>
+            </nav>
+        </aside>
+
+        <div>
+            <header class="topbar">
+                <div style="display:flex;align-items:center;gap:18px">
+                    <div class="brand">BOT_SHOPPER_ADMIN</div>
+                    <div class="module">상점 모듈</div>
+                </div>
+                <input class="search" placeholder="상품 검색..." disabled>
+            </header>
+
+            <main>
+                <section class="head">
+                    <div>
+                        <h1>상품 목록</h1>
+                        <p class="sub">인가된 세션에서 상품을 구매할 수 있습니다.</p>
+                    </div>
+                    <div class="identity">
+                        <div>
+                            <div class="label">사용자</div>
+                            <strong>{{ user.username }}</strong>
+                        </div>
+                        <div>
+                            <div class="label">크레딧</div>
+                            <strong class="primary">{{ user.balance }} 크레딧</strong>
+                        </div>
+                    </div>
+                </section>
+
+                {% if message %}
+                    <div class="message">{{ message }}</div>
+                {% endif %}
+
+                <section class="stats">
+                    <div class="stat">
+                        <div class="label">상품 수</div>
+                        <strong>{{ products|length }}</strong>
+                    </div>
+                    <div class="stat">
+                        <div class="label">시스템 상태</div>
+                        <strong>온라인</strong>
+                    </div>
+                </section>
+
+                <section class="table-card">
+                    <div class="table-head">
+                        <strong>활성 상품</strong>
+                        <span class="label">{{ products|length }}개 표시 중</span>
+                    </div>
+                    <div style="overflow-x:auto">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width:80px;text-align:center">ID</th>
+                                    <th>이름</th>
+                                    <th style="text-align:right">가격</th>
+                                    <th style="text-align:center">작업</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for product in products %}
+                                <tr>
+                                    <td class="id" style="text-align:center">{{ "%02d"|format(product.id) }}</td>
+                                    <td>
+                                        <div class="product-name">{{ product.name }}</div>
+                                        <div class="product-sub">
+                                            {% if product.name == "Coffee" %}프리미엄 로스트 블렌드
+                                            {% elif product.name == "Mousepad" %}저마찰 텍스타일 표면
+                                            {% elif product.name == "Keyboard" %}관리자 터미널용 기계식 배열
+                                            {% elif product.name == "Coupon Book" %}희귀 바우처 코드 묶음
+                                            {% else %}CTF 목표 상품{% endif %}
+                                        </div>
+                                    </td>
+                                    <td class="price">{{ product.price }}.00</td>
+                                    <td style="text-align:center">
+                                        <form method="post" action="/buy">
+                                            <input type="hidden" name="product_id" value="{{ product.id }}">
+                                            <button type="submit">구매</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

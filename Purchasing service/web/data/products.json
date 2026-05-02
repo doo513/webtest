@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "Coffee",
+    "price": 100,
+    "is_flag": false
+  },
+  {
+    "id": 2,
+    "name": "Mousepad",
+    "price": 300,
+    "is_flag": false
+  },
+  {
+    "id": 3,
+    "name": "Keyboard",
+    "price": 700,
+    "is_flag": false
+  },
+  {
+    "id": 4,
+    "name": "Coupon Book",
+    "price": 1200,
+    "is_flag": false
+  },
+  {
+    "id": 5,
+    "name": "Flag",
+    "price": 3000,
+    "is_flag": true
+  }
+]
