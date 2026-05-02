@@ -1,0 +1,6 @@
+[wargame]
+title = Purchasing_Service
+tags = web
+flag = 2026HL{avsvosejagGRbvb4t23t1dsgSV42gVShFSWgssagV42t3t2t}
+internal_port = 8000/tcp
+docker_compose = false

@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.DS_Store
+venv/
+.venv/
+.tmp_*/
+Bot Shopper/venv/
+Bot Shopper/__pycache__/
+Bot Shopper/
+Purchasing service/web/__pycache__/
+Purchasing service/public/__pycache__/

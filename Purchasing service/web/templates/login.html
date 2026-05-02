@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인 - Bot Shopper</title>
+    <style>
+        :root {
+            --bg: #f7f9fb;
+            --panel: #ffffff;
+            --panel-soft: #f2f4f7;
+            --border: #c7cfdd;
+            --text: #151923;
+            --muted: #64748b;
+            --primary: #004ac6;
+            --primary-dark: #003ea8;
+            --error-bg: #ffdad6;
+            --error: #93000a;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            background:
+                radial-gradient(circle at 2px 2px, rgba(0, 74, 198, .08) 1px, transparent 0),
+                var(--bg);
+            background-size: 24px 24px;
+            color: var(--text);
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+        .login-shell { width: min(420px, calc(100vw - 32px)); }
+        .brand { margin-bottom: 26px; text-align: center; }
+        .brand h1 {
+            margin: 0 0 8px;
+            font-size: 24px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+        .brand p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .panel {
+            border: 1px solid var(--border);
+            background: var(--panel);
+            padding: 22px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, .04);
+        }
+        label {
+            display: block;
+            margin-bottom: 7px;
+            color: #273142;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+        }
+        .field { margin-bottom: 18px; }
+        input {
+            width: 100%;
+            height: 48px;
+            border: 1px solid var(--border);
+            background: var(--panel-soft);
+            padding: 0 13px;
+            color: var(--text);
+            font-size: 15px;
+            outline: none;
+        }
+        input:focus { border-color: var(--primary); background: #fff; }
+        .hint {
+            border-left: 3px solid var(--primary);
+            background: #e9edf2;
+            color: var(--muted);
+            padding: 10px 12px;
+            font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+        .error {
+            background: var(--error-bg);
+            color: var(--error);
+            padding: 10px 12px;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+        button {
+            width: 100%;
+            height: 50px;
+            border: 0;
+            background: var(--primary);
+            color: #fff;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+        button:hover { background: var(--primary-dark); }
+        footer {
+            margin-top: 18px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <main class="login-shell">
+        <div class="brand">
+            <h1>Bot Shopper</h1>
+            <p>CTF 관리자 터미널</p>
+        </div>
+
+        <section class="panel">
+            {% if error %}
+                <div class="error">{{ error }}</div>
+            {% endif %}
+
+            <form method="post">
+                <div class="field">
+                    <label for="username">사용자 이름</label>
+                    <input id="username" name="username" type="text" placeholder="계정 입력" autocomplete="username">
+                </div>
+
+                <div class="field">
+                    <label for="password">비밀번호</label>
+                    <input id="password" name="password" type="password" placeholder="비밀번호 입력" autocomplete="current-password">
+                </div>
+
+                <div class="hint">힌트: guest / guest123</div>
+
+                <button type="submit">로그인</button>
+            </form>
+        </section>
+
+        <footer>보안 환경 v1.0.4-stable</footer>
+    </main>
+</body>
+</html>
