@@ -23,6 +23,7 @@ guest / guest123
 - `public/app.py`: 주요 Flask 라우트와 구매/교환 로직
 - `public/data/users.json`: 사용자별 크레딧 정보
 - `public/data/products.json`: 상품 정보
+- `public/templates/`: 화면 템플릿
 
 ## 참고
 

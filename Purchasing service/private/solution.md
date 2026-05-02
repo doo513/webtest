@@ -1,13 +1,13 @@
-# Solution
+# 풀이
 
-1. Login with `guest / guest123`.
-2. Confirm that buying the Flag product directly fails because the guest balance is too low.
-3. Open the delegated purchase page.
-4. Intercept the URL request form.
-5. Change `bot_active=false` to `bot_active=true`.
-6. Change `buyer=guest` to `buyer=bot`.
-7. Change the request URL to `/buy?product_id=5`.
-8. The delegated purchase bot sends the URL request with the bot session, and the server converts the `/buy` URL into a POST purchase request.
-9. Reopen the ledger page and inspect the HTML response source.
-10. Find the hidden ledger metadata comment containing `GIFT-...`.
-11. Submit the gift code to `/redeem` to receive the flag.
+1. `guest / guest123`으로 로그인한다.
+2. 상점에서 플래그 상품을 직접 구매하면 크레딧 부족으로 실패하는 것을 확인한다.
+3. 대리구매 화면으로 이동한다.
+4. 대리구매 URL 요청 폼을 인터셉트한다.
+5. `bot_active=false`를 `bot_active=true`로 바꾼다.
+6. `buyer=guest`를 `buyer=bot`으로 바꾼다.
+7. 요청 URL을 `/buy?product_id=5`로 바꾼다.
+8. 서버가 봇 세션으로 내부 구매 요청을 보내고, 봇이 플래그 상품을 구매한다.
+9. 구매 원장 페이지를 다시 열고 HTML 응답 소스를 확인한다.
+10. `GIFT-...` 형식의 기프트 코드를 찾는다.
+11. `/redeem`에서 기프트 코드를 교환해 플래그를 획득한다.

@@ -4,10 +4,11 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 
-COPY web/requirements.txt /app/requirements.txt
+COPY public/requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
-COPY web/ /app/
+COPY public/ /app/
+COPY private/runtime.py /app/runtime.py
 COPY private/flag.txt /app/flag.txt
 
 EXPOSE 8000

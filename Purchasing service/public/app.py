@@ -85,14 +85,14 @@ def team_orders(team_id):
 def buy_product(username, product_id):
     user = USERS.get(username)
     if not user:
-        return False, "Unknown user."
+        return False, "알 수 없는 사용자입니다."
 
     product = find_product(product_id)
     if not product:
-        return False, "Unknown product."
+        return False, "알 수 없는 상품입니다."
 
     if user["balance"] < product["price"]:
-        return False, "Not enough credits."
+        return False, "크레딧이 부족합니다."
 
     user["balance"] -= product["price"]
     gift_code = None
@@ -108,18 +108,18 @@ def buy_product(username, product_id):
             "gift_code": gift_code,
         }
     )
-    return True, f"Purchased {product['name']}."
+    return True, f"{product['name']} 구매가 완료되었습니다."
 
 
 def redeem_code(username, code):
     user = USERS.get(username)
     if not user:
-        return False, "Unknown user."
+        return False, "알 수 없는 사용자입니다."
 
     for order in team_orders(user["team_id"]):
         if order.get("gift_code") == code:
             return True, read_flag()
-    return False, "Invalid code."
+    return False, "유효하지 않은 코드입니다."
 
 
 @app.route("/")
@@ -151,7 +151,7 @@ def login():
         session["username"] = username
         return redirect(url_for("index"))
 
-    return render_template("login.html", error="Login failed.")
+    return render_template("login.html", error="로그인에 실패했습니다.")
 
 
 @app.route("/logout")
@@ -181,15 +181,15 @@ def settings():
         target_url = request.form.get("target_url", "/").strip()
 
         if bot_active != "true":
-            return render_settings("Delegated purchase bot is inactive.")
+            return render_settings("대리구매 봇이 비활성화되어 있습니다.")
 
         if buyer != "bot":
-            return render_settings("Delegated request was queued for manual review.")
+            return render_settings("대리구매 요청이 수동 검토 대기열에 등록되었습니다.")
 
         if send_delegated_request(app, BASE_URL, buyer, target_url):
-            return render_settings("Delegated request was sent.")
+            return render_settings("대리구매 요청을 전송했습니다.")
 
-        return render_settings("Delegated request failed.")
+        return render_settings("대리구매 요청 전송에 실패했습니다.")
 
     return render_settings()
 
@@ -201,7 +201,7 @@ def buy():
         return redirect(url_for("login"))
 
     if user["role"] == "purchase-bot" and not is_internal_bot_request(request.remote_addr):
-        return "Bot purchases must originate from the internal purchase service.", 403
+        return "봇 구매는 내부 구매 서비스에서만 요청할 수 있습니다.", 403
 
     try:
         product_id = int(request.form.get("product_id", "0"))
@@ -213,7 +213,7 @@ def buy():
         "shop.html",
         user=current_user(),
         products=PRODUCTS,
-        message=message if ok else f"Purchase failed: {message}",
+        message=message if ok else f"구매 실패: {message}",
     )
 
 
@@ -225,7 +225,7 @@ def redeem():
 
     code = request.form.get("code", "").strip()
     ok, result = redeem_code(user["username"], code)
-    return render_index(None, result if ok else f"Redeem failed: {result}")
+    return render_index(None, result if ok else f"교환 실패: {result}")
 
 
 def render_index(message=None, redeem_result=None):
