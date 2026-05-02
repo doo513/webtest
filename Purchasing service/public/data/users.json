@@ -5,7 +5,7 @@
   "guest1": {
     "balance": 200
   },
-  "bot": {
+  "leader": {
     "balance": 5000
   }
 }

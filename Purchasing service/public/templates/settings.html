@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>대리구매 - Bot Shopper</title>
+    <title>대리구매 - Purchasing Service</title>
     <style>
         :root {
             --bg: #f7f9fb;
@@ -199,7 +199,7 @@
 
         <div>
             <header class="topbar">
-                <div class="brand">BOT_SHOPPER_ADMIN</div>
+                <div class="brand">PURCHASING_SERVICE</div>
             </header>
 
             <main>
@@ -211,9 +211,9 @@
                     <div class="card">
                         <div class="card-head"><h1>대리구매 요청</h1></div>
                         <div class="card-body">
-                            <div class="alert">구매 봇은 현재 비활성화되어 있습니다.</div>
+                            <div class="alert">대리구매 leader는 현재 비활성화되어 있습니다.</div>
                             <form method="post" action="/settings">
-                                <input type="hidden" name="bot_active" value="false">
+                                <input type="hidden" name="leader_active" value="false">
                                 <label class="label" for="buyer">구매자 계정</label>
                                 <p><input id="buyer" type="text" name="buyer" value="{{ user.username }}"></p>
                                 <label class="label" for="target_url">요청 URL</label>

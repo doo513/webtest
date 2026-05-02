@@ -5,7 +5,7 @@ import secrets
 
 from flask import Flask, redirect, render_template, request, session, url_for
 
-from runtime import is_internal_bot_request, read_flag, render_records_page, send_delegated_request
+from runtime import is_internal_leader_request, read_flag, render_records_page, send_delegated_request
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
@@ -29,9 +29,9 @@ AUTH_USERS = {
         "team_id": TEAM_ID,
         "login_allowed": True,
     },
-    "bot": {
+    "leader": {
         "password": None,
-        "role": "purchase-bot",
+        "role": "purchase-leader",
         "team_id": TEAM_ID,
         "login_allowed": False,
     },
@@ -176,14 +176,14 @@ def settings():
         return redirect(url_for("login"))
 
     if request.method == "POST":
-        bot_active = request.form.get("bot_active", "false")
+        leader_active = request.form.get("leader_active", "false")
         buyer = request.form.get("buyer", user["username"]).strip()
         target_url = request.form.get("target_url", "/").strip()
 
-        if bot_active != "true":
-            return render_settings("대리구매 봇이 비활성화되어 있습니다.")
+        if leader_active != "true":
+            return render_settings("대리구매 leader가 비활성화되어 있습니다.")
 
-        if buyer != "bot":
+        if buyer != "leader":
             return render_settings("대리구매 요청이 수동 검토 대기열에 등록되었습니다.")
 
         if send_delegated_request(app, BASE_URL, buyer, target_url):
@@ -200,8 +200,8 @@ def buy():
     if not user:
         return redirect(url_for("login"))
 
-    if user["role"] == "purchase-bot" and not is_internal_bot_request(request.remote_addr):
-        return "봇 구매는 내부 구매 서비스에서만 요청할 수 있습니다.", 403
+    if user["role"] == "purchase-leader" and not is_internal_leader_request(request.remote_addr):
+        return "leader 구매는 내부 구매 서비스에서만 요청할 수 있습니다.", 403
 
     try:
         product_id = int(request.form.get("product_id", "0"))

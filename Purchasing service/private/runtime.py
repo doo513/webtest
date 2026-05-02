@@ -25,7 +25,7 @@ def render_records_page(html, records):
     return html
 
 
-def is_internal_bot_request(remote_addr):
+def is_internal_leader_request(remote_addr):
     return remote_addr in ("127.0.0.1", "::1")
 
 
